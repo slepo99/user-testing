@@ -31,7 +31,7 @@ class AuthController {
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Registration failed", errors });
       }
-      const { username, password, subject } = req.body;
+      const { username, password, subject, roles } = req.body;
       const candidate = await User.findOne({ username });
       if (candidate) {
         return res
@@ -39,11 +39,11 @@ class AuthController {
           .json({ message: "User with the same name already exists" });
       }
       const hashPassword = bcrypt.hashSync(password, 7);
-      const userRole = await Role.findOne({ value: "USER" });
+      const userRole = await Role.findOne({ value: roles });
       const user = new User({
         username,
 
-        subject,
+        subject, 
         password: hashPassword,
         roles: [userRole!.value],
       });

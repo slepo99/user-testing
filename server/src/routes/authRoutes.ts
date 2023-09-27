@@ -11,6 +11,7 @@ authRouter.post('/registration' ,[
     check('password', 'Password must be longer then 4 symbols and less then 10').isLength({min: 4, max: 10})
 ], 
 authController.registration)
+
 authRouter.post('/login', authController.login)
-authRouter.get('/users',roleMiddleware(["ADMIN", "USER"]), authController.getUsers)
+authRouter.get('/users',roleMiddleware(["ADMIN", "USER", "PM", "QA", "DEVELOPER", "UX"]), authController.getUsers)
 export default authRouter

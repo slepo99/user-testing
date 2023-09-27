@@ -1,12 +1,13 @@
 import express from "express";
 import mongoose from "mongoose";
 import testRouter from "./routes/testRoutes";
+import authRouter from "./routes/authRoutes";
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 const dbUrl ="mongodb+srv://slepo:slepo1606@cluster0.axlzehv.mongodb.net/?retryWrites=true&w=majority";
 app.use("/api", testRouter);
-
+app.use('/auth', authRouter)
 async function startApp() {
   try {
     await mongoose.connect(dbUrl);

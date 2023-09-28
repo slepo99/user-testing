@@ -1,16 +1,13 @@
-import axios from "axios";
+import axios, { AxiosResponse }  from "axios";
+import { UserData, RegistrationResponse } from "@/types/UserData";
 const baseURL = "http://localhost:3000/auth";
 
 const axiosInstance = axios.create({
   baseURL,
 });
 
-export const Register = async (data: any) => {
-  try {
-    const response = await axiosInstance.post("/register", data);
-    return response.data;
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
-  }
+export const Register = async (userData: UserData): Promise<AxiosResponse<RegistrationResponse>> => {
+  const response = await axiosInstance.post("/registration", userData);
+  return response;
+  
 };

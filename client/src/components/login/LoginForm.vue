@@ -5,25 +5,42 @@
       <input
         type="text"
         id="username"
-        v-model="loginValue"
+        v-model="loginData.username"
         placeholder="Enter username"
       />
       <label for="password">Password:</label>
       <input
         type="text"
         id="password"
-        v-model="passwordValue"
+        v-model="loginData.password"
         placeholder="Enter password"
       />
-      <slot></slot>
-      <button>Submit</button>
+      <button @click.prevent="Login()">Submit</button>
     </form>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
-const loginValue = ref<string>("");
-const passwordValue = ref<string>("");
+import { reactive } from "vue";
+import { useLogin } from "@/store/LoginStore";
+const login = useLogin();
+interface LoginData {
+  username: string;
+  password: string;
+}
+
+const loginData = reactive<LoginData>({
+  username: "",
+  password: "",
+});
+
+async function Login() {
+  try {
+    await login.submitLogin(loginData);
+  } catch (error) {
+    console.log("Login error", error);
+    throw error;
+  }
+}
 </script>
 <style lang="scss" scoped>
 .container {

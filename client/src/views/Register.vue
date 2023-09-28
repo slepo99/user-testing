@@ -1,16 +1,9 @@
-<template >
-    <div>
-        <AuthForm>
-            <RoleSelector/>
-        </AuthForm>
-        
-    </div>
+<template>
+  <div>
+    <RegisterForm/>
+  </div>
 </template>
 <script lang="ts" setup>
-import AuthForm from '@/components/AuthForm.vue';
-import RoleSelector from '@/components/RoleSelector.vue'
-
+import RegisterForm from "@/components/registration/RegisterForm.vue";
 </script>
-<style lang="scss" scoped>
-    
-</style>
+<style lang="scss" scoped></style>

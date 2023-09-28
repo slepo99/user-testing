@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="role">
-      <select name="role" id="role" v-model="selectedRole">
+      <select name="role" id="role" v-model="selectedRole" @change="setRole()">
         <option
           v-for="test in testsStore.tests"
           :key="test._id"
@@ -18,9 +18,13 @@ import { onMounted, ref } from "vue";
 import { useTests } from "@/store/TestsStore";
 const testsStore = useTests();
 const selectedRole = ref("USER");
+const emit = defineEmits();
+function setRole() {
+  emit("setRole", selectedRole.value);
+}
 onMounted(() => {
   testsStore.fetchTests();
-  console.log(selectedRole);
+  emit("setRole", selectedRole.value);
 });
 </script>
 <style lang="scss" scoped></style>

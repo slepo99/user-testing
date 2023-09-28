@@ -8,7 +8,6 @@
         v-model="loginValue"
         placeholder="Enter username"
       />
-    
       <label for="password">Password:</label>
       <input
         type="text"
@@ -22,19 +21,19 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
-const loginValue = ref<string>('')
-const passwordValue = ref<string>('')
+import { ref } from "vue";
+const loginValue = ref<string>("");
+const passwordValue = ref<string>("");
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
   height: 230px;
   margin-bottom: 200px;
-    .auth-form {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
-    }
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
 }
 </style>

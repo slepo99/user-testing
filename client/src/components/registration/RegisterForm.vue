@@ -1,22 +1,23 @@
 <template>
   <div class="container">
     <form class="auth-form">
-      <label for="username">Login:</label>
+      <label for="username"><h4>Login:</h4></label>
       <input
         type="text"
         id="username"
         v-model="userData.username"
         placeholder="Enter username"
       />
-      <label for="password">Password:</label>
+      <label for="password"><h4>Password:</h4></label>
       <input
         type="text"
         id="password"
         v-model="userData.password"
         placeholder="Enter password"
       />
+      <h4>Choose your specialisation:</h4>
       <RoleSelector @setRole="getRole" />
-      <button @click.prevent="Register()">Submit</button>
+      <button @click.prevent="Register()">Sign up</button>
     </form>
   </div>
 </template>
@@ -54,12 +55,26 @@ async function Register() {
 <style lang="scss" scoped>
 .container {
   height: 230px;
-  margin-bottom: 200px;
+  margin-bottom: 20px;
+  
   .auth-form {
+    width: 400px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    align-items: center;
+    button {
+      width: 120px;
+      height: 25px;
+    }
+    input {
+      width: 220px;
+      height: 40px;
+
+    }
+
+    
   }
 }
 </style>

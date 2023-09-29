@@ -15,8 +15,9 @@
         v-model="loginData.password"
         placeholder="Enter password"
       />
-      <button @click.prevent="Login()">Submit</button>
+      <button @click.prevent="Login()">Sign in</button>
     </form>
+    <div>Don't have an account yet? <router-link to="/register">sign up.</router-link> </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -51,6 +52,7 @@ async function Login() {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    margin-bottom: 30px;
   }
 }
 </style>

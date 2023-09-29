@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <label for="role">
       <select name="role" id="role" v-model="selectedRole" @change="setRole()">
         <option
@@ -27,4 +27,12 @@ onMounted(() => {
   emit("setRole", selectedRole.value);
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  width: 220px;
+  select {
+    width: 100%;
+    height: 30px;
+  }
+}
+</style>

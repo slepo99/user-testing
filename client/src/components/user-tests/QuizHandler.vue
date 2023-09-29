@@ -2,24 +2,28 @@
   <div class="container">
     <div v-if="!login.score">
       <div v-if="currentTest">
-      {{ currentTest.question }}
-      <div v-for="(answer, id) in currentTest.shuffledAnswers" :key="id">
-        <input
-          type="radio"
-          :name="answer._id"
-          :id="answer._id"
-          v-model="selectedAnswer"
-          :value="answer"
-        />
-        <label :for="answer._id">{{ answer.answer }} {{ id }}</label>
+        {{ currentTest.question }}
+        <div v-for="(answer, id) in currentTest.shuffledAnswers" :key="id">
+          <input
+            type="radio"
+            :name="answer._id"
+            :id="answer._id"
+            v-model="selectedAnswer"
+            :value="answer"
+          />
+          <label :for="answer._id">{{ answer.answer }} {{ id }}</label>
+        </div>
+        <button
+          @click="nextQuestion"
+          v-if="isTestsExists"
+          :disabled="isDisabled"
+        >
+          <span v-if="isGeneralTests">Next</span>
+          <span v-else-if="isLastTest">Finish</span>
+        </button>
       </div>
-      <button @click="nextQuestion" v-if="isTestsExists" :disabled="isDisabled">
-        <span v-if="isGeneralTests">Next</span>
-        <span v-else-if="isLastTest">Finish</span>
-      </button>
     </div>
-    </div>
-    <div v-else-if="login.score || score">
+    <div v-else>
       <h1>You passed all tests. Your result is {{ login.score }} / 10</h1>
     </div>
   </div>
@@ -29,7 +33,7 @@
 import { useTests } from "@/store/TestsStore";
 import { useLogin } from "@/store/LoginStore";
 import { useRegister } from "@/store/RegisterStore";
-import { ref, computed, onMounted, onBeforeMount} from "vue";
+import { ref, computed, onMounted } from "vue";
 import Cookies from "js-cookie";
 
 const selectedAnswer = ref();
@@ -81,15 +85,16 @@ async function nextQuestion() {
       console.log(score);
       try {
         await register.updateProfile({ score: score.value.toString() });
-       Cookies.set("authScore", score.value.toString(), {
-          expires: 1,
-          secure: true,
-          sameSite: "strict",
-        } )
-
-      } catch(error) {
-        console.log("User data update error");
-        
+        await new Promise<void>((resolve) => {
+          Cookies.set("authScore", score.value.toString(), {
+            expires: 1,
+            secure: true,
+            sameSite: "strict",
+          });
+          resolve();
+        });
+      } catch (error) {
+        console.log("User data update error", error);
       }
     }
     selectedAnswer.value = null;
@@ -107,13 +112,10 @@ const isGeneralTests = computed(() => {
 const isLastTest = computed(() => {
   return currentQuestionIndex.value <= filteredTests.value[0].tests.length;
 });
-  onBeforeMount(() => {
-     register.resaveScore();
-  })
- onMounted( () => {
-  
-   testsStore.fetchTests();
-  
+
+onMounted(async () => {
+  register.resaveScore();
+  await testsStore.fetchTests();
 });
 </script>
 

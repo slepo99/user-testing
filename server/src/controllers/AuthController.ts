@@ -21,17 +21,17 @@ class AuthController {
       res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      ); 
+      );
       res.setHeader(
         "Access-Control-Allow-Headers",
         "X-Requested-With,content-type"
       );
-      res.setHeader("Access-Control-Allow-Credentials", "true"); 
+      res.setHeader("Access-Control-Allow-Credentials", "true");
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Registration failed", errors });
       }
-      const { username, password, subject, roles } = req.body;
+      const { username, password, roles, score } = req.body;
       const candidate = await User.findOne({ username });
       if (candidate) {
         return res
@@ -42,10 +42,9 @@ class AuthController {
       const userRole = await Role.findOne({ value: roles });
       const user = new User({
         username,
-
-        subject, 
         password: hashPassword,
         roles: [userRole!.value],
+        score: "",
       });
       await user.save();
       return res.json({ message: "User successfully registered" });
@@ -65,7 +64,7 @@ class AuthController {
       res.setHeader(
         "Access-Control-Allow-Headers",
         "X-Requested-With,content-type"
-      ); 
+      );
       res.setHeader("Access-Control-Allow-Credentials", "true");
       const { username, password } = req.body;
       const user = await User.findOne({ username });
@@ -101,6 +100,53 @@ class AuthController {
       res.json(users);
     } catch (e) {
       console.error(e);
+    }
+  }
+  async updateUser(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const { username, password, roles, score } = req.body;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (username) {
+        user.username = username;
+      }
+      if (password) {
+        const hashPassword = bcrypt.hashSync(password, 7);
+        user.password = hashPassword;
+      }
+      if (roles) {
+        const userRole = await Role.findOne({ value: roles });
+        user.roles = [userRole!.value];
+      }
+      if (score) {
+        user.score = score;
+      }
+
+      await user.save();
+
+      return res.json({ message: "User data updated successfully" });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  async getUserById(req, res) {
+    try {
+      const { userId } = req.params; 
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }  
+      res.json(user);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 }

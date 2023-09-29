@@ -1,7 +1,7 @@
 <template>
   <div lazy class="container">
-    <div v-if="!login.score">
-      <h2>{{ currentQuestionIndex  }} / 10</h2>
+    <div v-if="!storageScore">
+      <h2>{{ currentQuestionIndex }} / 10</h2>
       <div v-if="currentTest">
         {{ currentTest.question }}
         <div v-for="(answer, id) in currentTest.shuffledAnswers" :key="id">
@@ -24,8 +24,8 @@
         </button>
       </div>
     </div>
-    <div v-else>
-      <h1>You passed all tests. Your result is {{ login.score }} / 10</h1>
+    <div v-else-if="storageScore.length">
+      <h1>You passed all tests. Your result is {{ storageScore }} / 10</h1>
     </div>
   </div>
 </template>
@@ -36,13 +36,13 @@ import { useLogin } from "@/store/LoginStore";
 import { useRegister } from "@/store/RegisterStore";
 import { ref, computed, onMounted } from "vue";
 
-
 const selectedAnswer = ref();
 const login = useLogin();
 const testsStore = useTests();
 const register = useRegister();
 const currentQuestionIndex = ref(0);
 const score = ref(0);
+const storageScore = ref(localStorage.getItem("authScore"));
 
 const filteredTests = computed(() => {
   return testsStore.tests.filter((item) => item.role === login.role);
@@ -77,18 +77,17 @@ const currentTest = computed(() => {
 });
 
 async function nextQuestion() {
-  if (currentQuestionIndex.value < filteredTests.value[0].tests.length ) {
+  if (currentQuestionIndex.value < filteredTests.value[0].tests.length) {
     currentQuestionIndex.value++;
     if (selectedAnswer.value.isTrue == true) {
       score.value++;
     }
-    if (currentQuestionIndex.value == filteredTests.value[0].tests.length ) {
-
+    if (currentQuestionIndex.value == filteredTests.value[0].tests.length) {
       try {
         await register.updateProfile({ score: score.value.toString() });
-       
-          localStorage.setItem("authScore", score.value.toString())
-         location.reload()
+
+        localStorage.setItem("authScore", score.value.toString());
+        location.reload();
       } catch (error) {
         console.log("User data update error", error);
       }
@@ -110,7 +109,7 @@ const isLastTest = computed(() => {
 });
 
 onMounted(async () => {
- await register.resaveScore();
+  await register.resaveScore();
   await testsStore.fetchTests();
 });
 </script>

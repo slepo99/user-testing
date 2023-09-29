@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="message">
-      <h3>Name "{{ login.username }}"</h3>
-      <h3>Specialization: {{ login.role }}</h3>
+      <h3>Name "{{ username }}"</h3>
+      <h3>Specialization: {{ role }}</h3>
     </div>
     <div class="logout">
       <button @click="Logout">Logout</button>
@@ -11,7 +11,10 @@
 </template>
 <script lang="ts" setup>
 import { useLogin } from "@/store/LoginStore";
+import { ref } from "vue";
 const login = useLogin();
+const username = ref(localStorage.getItem('authUsername'))
+const role = ref(localStorage.getItem('authRole'))
 async function Logout() {
  await login.submitLogout();
 }

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  frontend:
+    image: client 
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - backend
+  backend:
+    image: server 
+    ports:
+      - "3000:3000" 
+
+
+

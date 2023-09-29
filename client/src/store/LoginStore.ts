@@ -41,7 +41,7 @@ export const useLogin = defineStore("login", {
         localStorage.setItem("authScore", score);
         
         router.push("/");
-        location.reload()
+       // location.reload()
       } catch (error: any) {
         console.log("auth error", error);
       }

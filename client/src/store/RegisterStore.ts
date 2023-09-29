@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import router from "@/router";
-import Cookies from "js-cookie";
 import { Register, UpdateUser, UpdateScore } from "@/services/registerApi";
 import { RegistrationResponse, UserData, UpdatedData } from "@/types/UserData";
 export const useRegister = defineStore("register", {
@@ -35,14 +34,7 @@ export const useRegister = defineStore("register", {
         const response = await UpdateScore();
         const score = response.data.score || "";
 
-        await new Promise<void>((resolve) => {
-          Cookies.set("authScore", score, {
-            expires: 1,
-            secure: true,
-            sameSite: "strict",
-          });
-          resolve();
-        });
+        localStorage.setItem("authScore", score);
       } catch (error) {
         console.log("resaveScore error", error);
       }

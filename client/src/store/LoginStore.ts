@@ -1,42 +1,24 @@
 import { defineStore } from "pinia";
 import router from "@/router";
-import Cookies from "js-cookie";
 import { Login } from "@/services/loginApi";
 import { LoginData } from "@/types/UserData";
 import { Token } from "@/types/Token";
 export const useLogin = defineStore("login", {
   state: (): Token => ({
-    token: Cookies.get("authToken") || "",
-    username: Cookies.get("authUsername") || "",
-    role: Cookies.get("authRole") || "",
-    _id: Cookies.get("authId") || "",
-    score: Cookies.get("authScore") || "",
+    token: localStorage.getItem("authToken") || "",
+    username: localStorage.getItem("authUsername") || "",
+    role: localStorage.getItem("authRole") || "",
+    _id: localStorage.getItem("authId") || "",
+    score: localStorage.getItem("authScore") || "",
   }),
   actions: {
     async submitLogout() {
       try {
-        await Promise.all([
-          new Promise<void>((resolve) => {
-            Cookies.remove("authToken");
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.remove("authUsername");
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.remove("authRole");
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.remove("authId");
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.remove("authScore");
-            resolve();
-          }),
-        ]);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authUsername");
+        localStorage.removeItem("authRole");
+        localStorage.removeItem("authId");
+        localStorage.removeItem("authScore");
 
         router.push("/login");
       } catch (error) {
@@ -46,56 +28,20 @@ export const useLogin = defineStore("login", {
     async submitLogin(loginData: LoginData) {
       try {
         const response = await Login(loginData);
-        console.log(response.data);
 
         const token = response.data.token || "";
         const username = response.data.user.username || "";
         const role = response.data.user.roles[0] || "";
         const _id = response.data.user._id || "";
         const score = response.data.user.score || "";
-        await Promise.all([
-          new Promise<void>((resolve) => {
-            Cookies.set("authToken", token, {
-              expires: 1,
-              secure: true,
-              sameSite: "strict",
-            });
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.set("authUsername", username, {
-              expires: 1,
-              secure: true,
-              sameSite: "strict",
-            });
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.set("authRole", role, {
-              expires: 1,
-              secure: true,
-              sameSite: "strict",
-            });
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.set("authId", _id, {
-              expires: 1,
-              secure: true,
-              sameSite: "strict",
-            });
-            resolve();
-          }),
-          new Promise<void>((resolve) => {
-            Cookies.set("authScore", score, {
-              expires: 1,
-              secure: true,
-              sameSite: "strict",
-            });
-            resolve();
-          }),
-        ]);
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("authUsername", username);
+        localStorage.setItem("authRole", role);
+        localStorage.setItem("authId", _id);
+        localStorage.setItem("authScore", score);
+        
         router.push("/");
+        location.reload()
       } catch (error: any) {
         console.log("auth error", error);
       }

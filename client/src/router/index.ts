@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Cookies from "js-cookie";
 const Main = () => import("@/views/Main.vue");
 const Login = () => import("@/views/Login.vue");
 const Register = () => import("@/views/Register.vue");
@@ -9,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Home",
     component: Main,
     beforeEnter: (_to, _from, next) => {
-      if (Cookies.get("authToken")) {
+      if (localStorage.getItem("authToken")) {
         next();
       } else {
         next({ name: "Login" });
@@ -21,7 +20,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Login",
     component: Login,
     beforeEnter: (_to, _from, next) => {
-      if (!Cookies.get("authToken")) {
+      if (!localStorage.getItem("authToken")) {
         next();
       } else {
         next({ name: "Home" });
@@ -33,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Register",
     component: Register,
     beforeEnter: (_to, _from, next) => {
-      if (!Cookies.get("authToken")) {
+      if (!localStorage.getItem("authToken")) {
         next();
       } else {
         next({ name: "Home" });

@@ -1,6 +1,7 @@
 <template>
-  <div class="container">
+  <div lazy class="container">
     <div v-if="!login.score">
+      <h2>{{ currentQuestionIndex  }} / 10</h2>
       <div v-if="currentTest">
         {{ currentTest.question }}
         <div v-for="(answer, id) in currentTest.shuffledAnswers" :key="id">
@@ -34,7 +35,7 @@ import { useTests } from "@/store/TestsStore";
 import { useLogin } from "@/store/LoginStore";
 import { useRegister } from "@/store/RegisterStore";
 import { ref, computed, onMounted } from "vue";
-import Cookies from "js-cookie";
+
 
 const selectedAnswer = ref();
 const login = useLogin();
@@ -76,23 +77,18 @@ const currentTest = computed(() => {
 });
 
 async function nextQuestion() {
-  if (currentQuestionIndex.value < filteredTests.value[0].tests.length) {
+  if (currentQuestionIndex.value < filteredTests.value[0].tests.length ) {
     currentQuestionIndex.value++;
     if (selectedAnswer.value.isTrue == true) {
       score.value++;
     }
-    if (currentQuestionIndex.value == filteredTests.value[0].tests.length) {
-      console.log(score);
+    if (currentQuestionIndex.value == filteredTests.value[0].tests.length ) {
+
       try {
         await register.updateProfile({ score: score.value.toString() });
-        await new Promise<void>((resolve) => {
-          Cookies.set("authScore", score.value.toString(), {
-            expires: 1,
-            secure: true,
-            sameSite: "strict",
-          });
-          resolve();
-        });
+       
+          localStorage.setItem("authScore", score.value.toString())
+         location.reload()
       } catch (error) {
         console.log("User data update error", error);
       }
@@ -114,7 +110,7 @@ const isLastTest = computed(() => {
 });
 
 onMounted(async () => {
-  register.resaveScore();
+ await register.resaveScore();
   await testsStore.fetchTests();
 });
 </script>

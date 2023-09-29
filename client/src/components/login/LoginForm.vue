@@ -21,7 +21,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive} from "vue";
 import { useLogin } from "@/store/LoginStore";
 const login = useLogin();
 interface LoginData {
@@ -42,6 +42,7 @@ async function Login() {
     throw error;
   }
 }
+
 </script>
 <style lang="scss" scoped>
 .container {

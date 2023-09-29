@@ -1,7 +1,6 @@
 import axios, { AxiosResponse }  from "axios";
 import { UserData, RegistrationResponse, UpdatedData } from "@/types/UserData";
 const baseURL = "http://localhost:3000/auth";
-import Cookies from "js-cookie";
 const axiosInstance = axios.create({
   baseURL,
 });
@@ -11,10 +10,10 @@ export const Register = async (userData: UserData): Promise<AxiosResponse<Regist
   return response;
 };
 export const UpdateUser = async (updatedData: UpdatedData): Promise<AxiosResponse<RegistrationResponse>> => {
-  const response = await axiosInstance.put(`/users/${Cookies.get("authId")}`, updatedData )
+  const response = await axiosInstance.put(`/users/${localStorage.getItem("authId")}`, updatedData )
   return response
 }
 export const UpdateScore = async () => {
-  const response = await axiosInstance.get(`/users/${Cookies.get("authId")}`)
+  const response = await axiosInstance.get(`/users/${localStorage.getItem("authId")}`)
   return response
 }

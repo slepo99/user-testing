@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import router from "@/router";
-import { Register } from "@/services/registerApi";
-import { RegistrationResponse, UserData } from "@/types/UserData";
+import Cookies from "js-cookie";
+import { Register, UpdateUser, UpdateScore } from "@/services/registerApi";
+import { RegistrationResponse, UserData, UpdatedData} from "@/types/UserData";
 export const useRegister = defineStore("register", {
   state: (): RegistrationResponse => ({
     status: 0,
@@ -27,5 +28,20 @@ export const useRegister = defineStore("register", {
        
       }
     },
+    async updateProfile(updatedData: UpdatedData) {
+      const response = await UpdateUser(updatedData)
+      console.log(response);
+      
+    },
+    async resaveScore() {
+      const response = await UpdateScore()
+      const score: any = response.data.score || ''
+      Cookies.set("authScore", score, {
+        expires: 1,
+        secure: true,
+        sameSite: "strict",
+      } )
+      
+    }
   },
 });

@@ -1,4 +1,3 @@
-# user-testing
 # User-Testing App
 
 ## Description

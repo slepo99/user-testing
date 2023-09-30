@@ -47,4 +47,3 @@ const router = createRouter({
 });
 
 export default router;
-//process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),

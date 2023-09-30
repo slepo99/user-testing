@@ -11,14 +11,16 @@ app.use(cors({origin: '*'}));
 app.use(express.json());
 app.use("/api", testRouter);
 app.use('/auth', authRouter)
-
+export default app; 
 
 async function startApp() {
   try {
     await mongoose.connect(dbUrl);
+    if (process.env.NODE_ENV !== 'test') {
     app.listen(PORT, () => {
       console.log("server works on " + PORT + " port");
     });
+  }
   } catch (e) {
     console.log(e);
   }

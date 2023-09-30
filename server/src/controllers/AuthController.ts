@@ -110,7 +110,7 @@ class AuthController {
       const user = await User.findById(userId);
 
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({message: "User not found" });
       }
 
       if (username) {
@@ -131,8 +131,8 @@ class AuthController {
       await user.save();
 
       return res.json({ message: "User data updated successfully" });
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   }

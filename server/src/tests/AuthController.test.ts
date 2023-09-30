@@ -3,17 +3,17 @@ import app from "../app";
 
 describe("AuthController", () => {
    describe("registration", () => {
-    // it("should register a new user", async () => {
-    //   const response = await request(app).post("/auth/registration").send({
-    //     username: "tesngIve",
-    //     password: "1234",
-    //     roles: "USER",
-    //     score: "0",
-    //   });
+    it("should register a new user", async () => {
+      const response = await request(app).post("/auth/registration").send({
+        username: "tesngIve",
+        password: "1234",
+        roles: "USER",
+        score: "0",
+      });
 
-    //   expect(response.statusCode).toBe(200);
-    //   expect(response.body.message).toBe("User successfully registered");
-    // });
+      expect(response.statusCode).toBe(200);
+      expect(response.body.message).toBe("User successfully registered");
+    });
 
     it("should return an error if registration fails", async () => {
       const response = await request(app).post("/auth/registration").send({

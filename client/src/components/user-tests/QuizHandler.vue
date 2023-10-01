@@ -4,7 +4,10 @@
       <h2>{{ currentQuestionIndex }} / 10</h2>
       <div v-if="currentTest">
         {{ currentTest.question }}
-        <div v-for="(answer, id) in currentTest.shuffledAnswers" :key="id">
+        <div
+          v-for="(answer, id) in currentTest.shuffledAnswers"
+          :key="answer._id"
+        >
           <input
             type="radio"
             :name="answer._id"
@@ -34,7 +37,7 @@
 import { useTests } from "@/store/TestsStore";
 import { useLogin } from "@/store/LoginStore";
 import { useRegister } from "@/store/RegisterStore";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted} from "vue";
 
 const selectedAnswer = ref();
 const login = useLogin();
@@ -43,9 +46,10 @@ const register = useRegister();
 const currentQuestionIndex = ref(0);
 const score = ref(0);
 const storageScore = ref(localStorage.getItem("authScore"));
+const role = ref(localStorage.getItem("authRole"))
 
 const filteredTests = computed(() => {
-  return testsStore.tests.filter((item) => item.role === login.role);
+  return testsStore.tests.filter((item) => item.role == role.value);
 });
 
 const currentTest = computed(() => {
@@ -66,7 +70,6 @@ const currentTest = computed(() => {
         shuffledAnswers[i],
       ];
     }
-
     return {
       ...test,
       shuffledAnswers: shuffledAnswers,

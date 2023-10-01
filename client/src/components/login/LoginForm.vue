@@ -23,7 +23,9 @@
 <script lang="ts" setup>
 import { reactive} from "vue";
 import { useLogin } from "@/store/LoginStore";
+import { useTests } from "@/store/TestsStore";
 const login = useLogin();
+const test = useTests()
 interface LoginData {
   username: string;
   password: string;
@@ -37,6 +39,7 @@ const loginData = reactive<LoginData>({
 async function Login() {
   try {
     await login.submitLogin(loginData);
+    test.fetchTests()
   } catch (error) {
     console.log("Login error", error);
     throw error;

@@ -19,7 +19,6 @@ export const useLogin = defineStore("login", {
         localStorage.removeItem("authRole");
         localStorage.removeItem("authId");
         localStorage.removeItem("authScore");
-
         router.push("/login");
       } catch (error) {
         console.log("logout error", error);

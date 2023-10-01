@@ -4,6 +4,7 @@ import Test from "@/types/Tests";
 export const useTests = defineStore("tests", {
   state: () => ({
     tests: [] as Test[],
+    num: 123
   }),
   actions: {
     async fetchTests(): Promise<void>  {

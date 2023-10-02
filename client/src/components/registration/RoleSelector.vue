@@ -29,10 +29,11 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .container {
-  width: 220px;
+  width: 100%;
   select {
     width: 100%;
     height: 30px;
+    cursor: pointer;
   }
 }
 </style>

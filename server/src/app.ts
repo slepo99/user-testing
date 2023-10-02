@@ -19,8 +19,6 @@ app.use(
 );
 export default app; 
 
-
-
 async function startApp() {
   try {
     await mongoose.connect(dbUrl);

@@ -2,9 +2,13 @@
   <div lazy class="container">
     <div v-if="!totalScore">
       <h2>{{ currentQuestionIndex }} / 10</h2>
-      <div v-if="currentTest">
-        {{ currentTest.question }}
-        <div v-for="answer in currentTest.shuffledAnswers" :key="answer._id">
+      <div v-if="currentTest" class="test-box">
+        <h1 class="question">{{ currentTest.question }}</h1>
+        <div
+          v-for="answer in currentTest.shuffledAnswers"
+          :key="answer._id"
+          class="answers"
+        >
           <input
             type="radio"
             :name="answer._id"
@@ -14,14 +18,17 @@
           />
           <label :for="answer._id">{{ answer.answer }} </label>
         </div>
-        <button
-          @click="nextQuestion"
-          v-if="isTestsExists"
-          :disabled="isDisabled"
-        >
-          <span v-if="isGeneralTests">Next</span>
-          <span v-else-if="isLastTest">Finish</span>
-        </button>
+        <div class="btn-box">
+          <button
+            @click="nextQuestion"
+            v-if="isTestsExists"
+            :disabled="isDisabled"
+            class="btn"
+          >
+            <span v-if="isGeneralTests">Next</span>
+            <span v-else-if="isLastTest">Finish</span>
+          </button>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -116,6 +123,21 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .container {
-  margin-top: 50px;
+  .test-box {
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    .btn-box {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+      margin-top: 20px;
+      .btn {
+        width: 100px;
+        height: 40px;
+      }
+    }
+  }
 }
 </style>

@@ -1,13 +1,10 @@
 <template>
   <div lazy class="container">
-    <div v-if="!storageScore">
+    <div v-if="!totalScore">
       <h2>{{ currentQuestionIndex }} / 10</h2>
       <div v-if="currentTest">
         {{ currentTest.question }}
-        <div
-          v-for="(answer, id) in currentTest.shuffledAnswers"
-          :key="answer._id"
-        >
+        <div v-for="answer in currentTest.shuffledAnswers" :key="answer._id">
           <input
             type="radio"
             :name="answer._id"
@@ -15,7 +12,7 @@
             v-model="selectedAnswer"
             :value="answer"
           />
-          <label :for="answer._id">{{ answer.answer }} {{ id }}</label>
+          <label :for="answer._id">{{ answer.answer }} </label>
         </div>
         <button
           @click="nextQuestion"
@@ -27,8 +24,8 @@
         </button>
       </div>
     </div>
-    <div v-else-if="storageScore.length">
-      <h1>You passed all tests. Your result is {{ storageScore }} / 10</h1>
+    <div v-else>
+      <h1>You passed all tests. Your result is {{ totalScore }} / 10</h1>
     </div>
   </div>
 </template>
@@ -37,16 +34,16 @@
 import { useTests } from "@/store/TestsStore";
 import { useLogin } from "@/store/LoginStore";
 import { useRegister } from "@/store/RegisterStore";
-import { ref, computed, onMounted} from "vue";
+import { ref, computed, onMounted } from "vue";
 
 const selectedAnswer = ref();
 const login = useLogin();
 const testsStore = useTests();
 const register = useRegister();
 const currentQuestionIndex = ref(0);
-const score = ref(0);
-const storageScore = ref(localStorage.getItem("authScore"));
-const role = ref(localStorage.getItem("authRole"))
+const currentScore = ref(0);
+const totalScore = ref(login.score);
+const role = ref(login.role);
 
 const filteredTests = computed(() => {
   return testsStore.tests.filter((item) => item.role == role.value);
@@ -83,13 +80,13 @@ async function nextQuestion() {
   if (currentQuestionIndex.value < filteredTests.value[0].tests.length) {
     currentQuestionIndex.value++;
     if (selectedAnswer.value.isTrue == true) {
-      score.value++;
+      currentScore.value++;
     }
     if (currentQuestionIndex.value == filteredTests.value[0].tests.length) {
       try {
-        await register.updateProfile({ score: score.value.toString() });
+        await register.updateProfile({ score: currentScore.value.toString() });
 
-        localStorage.setItem("authScore", score.value.toString());
+        localStorage.setItem("authScore", currentScore.value.toString());
         location.reload();
       } catch (error) {
         console.log("User data update error", error);

@@ -6,7 +6,7 @@ import roleMiddleware from "../middleware/RoleMiddleware";
 
 const authRouter = express.Router();
 
-authRouter.post('/registration' ,[
+authRouter.post('/registration',[
     check('username', 'User name can not be empty').notEmpty(),
     check('password', 'Password must be longer then 4 symbols and less then 10').isLength({min: 4, max: 10})
 ], 

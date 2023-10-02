@@ -37,7 +37,7 @@ class TestController {
     try {
       const { id } = req.params;
       if (!id) {
-        res.status(400).json({ error: "ID undefined" });
+        res.status(400).json({ error: "ID undefined" }); 
         return;
       }
       const test = await TestService.getOne(id);
@@ -50,7 +50,7 @@ class TestController {
       console.error("Error getting test:", error);
       res.status(500).json({ error: "Failed to fetch test." });
     }
-  }
+  } 
 }
 
 export default new TestController();

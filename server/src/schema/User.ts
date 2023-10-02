@@ -5,7 +5,7 @@ interface IUser extends Document {
   password: string;
   roles: string[];
   score: string;
-}
+};
 
 const userSchema: Schema<IUser> = new Schema<IUser>({
   username: { type: String, unique: true, required: true },

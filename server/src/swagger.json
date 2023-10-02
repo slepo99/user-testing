@@ -1,0 +1,286 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "User testing application",
+      "description": "My User Test Application API"
+      
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "API for users in the system"
+      },
+      {
+        "name": "Tests",
+        "description": "API for tests in the system"
+      }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+      "/api/registration": {
+        "post": {
+          "tags": ["Authentication"],
+          "summary": "User Registration",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "User registration data",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully registered"
+            },
+            "400": {
+              "description": "Validation error or user already exists"
+            }
+          }
+        }
+      },
+      "/api/login": {
+        "post": {
+          "tags": ["Authentication"],
+          "summary": "User Login",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "User login data",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful login",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "user": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials"
+            }
+          }
+        }
+      },
+      "/api/users": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get a list of all users",
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/users/{userId}": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get a user by ID",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "User ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/api/tests": {
+        "post": {
+          "tags": ["Tests"],
+          "summary": "Create a new test",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Test data",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Test"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Test successfully created"
+            },
+            "500": {
+              "description": "Failed to create test"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Tests"],
+          "summary": "Get all tests",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Test"
+                }
+              }
+            },
+            "500": {
+              "description": "Failed to fetch tests"
+            }
+          }
+        }
+      },
+      "/api/tests/{id}": {
+        "get": {
+          "tags": ["Tests"],
+          "summary": "Get a test by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Test ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/Test"
+              }
+            },
+            "404": {
+              "description": "Test not found"
+            },
+            "500": {
+              "description": "Failed to fetch test"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "unique": true,
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "ref": "Role"
+            }
+          },
+          "score": {
+            "type": "string"
+          }
+        },
+        "required": ["username", "password"]
+      },
+      "Test": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "answers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "answer": {
+                        "type": "string"
+                      },
+                      "isTrue": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["answer", "isTrue"]
+                  }
+                }
+              },
+              "required": ["question", "answers"]
+            }
+          }
+        },
+        "required": ["role", "tests"]
+      }
+    }
+  }
+  

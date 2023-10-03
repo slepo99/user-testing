@@ -15,16 +15,6 @@ class TestController {
 
   async getAll(req: Request, res: Response) {
     try {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "X-Requested-With,content-type"
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
       const tests = await TestService.getAll();
       res.json(tests);
     } catch (error) {
@@ -37,7 +27,7 @@ class TestController {
     try {
       const { id } = req.params;
       if (!id) {
-        res.status(400).json({ error: "ID undefined" }); 
+        res.status(400).json({ error: "ID undefined" });
         return;
       }
       const test = await TestService.getOne(id);
@@ -50,7 +40,7 @@ class TestController {
       console.error("Error getting test:", error);
       res.status(500).json({ error: "Failed to fetch test." });
     }
-  } 
+  }
 }
 
 export default new TestController();

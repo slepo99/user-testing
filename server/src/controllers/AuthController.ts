@@ -17,16 +17,6 @@ const generateAccessToken = (id: string, roles: string[]) => {
 class AuthController {
   async registration(req: Request, res: Response) {
     try {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "X-Requested-With,content-type"
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Registration failed", errors });
@@ -56,16 +46,6 @@ class AuthController {
 
   async login(req: Request, res: Response) {
     try {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "X-Requested-With,content-type"
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
       const { username, password } = req.body;
       const user = await User.findOne({ username });
       if (!user) {
@@ -86,16 +66,6 @@ class AuthController {
 
   async getUsers(req: Request, res: Response) {
     try {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "X-Requested-With,content-type"
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
       const users = await User.find();
       res.json(users);
     } catch (e) {
@@ -110,7 +80,7 @@ class AuthController {
       const user = await User.findById(userId);
 
       if (!user) {
-        return res.status(404).json({message: "User not found" });
+        return res.status(404).json({ message: "User not found" });
       }
 
       if (username) {
@@ -138,11 +108,11 @@ class AuthController {
   }
   async getUserById(req, res) {
     try {
-      const { userId } = req.params; 
+      const { userId } = req.params;
       const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
-      }  
+      }
       res.json(user);
     } catch (e) {
       console.error(e);

@@ -28,12 +28,10 @@
 <script lang="ts" setup>
 import {  reactive } from "vue";
 import { useLogin } from "@/store/LoginStore";
-import { useTests } from "@/store/TestsStore";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength } from "@vuelidate/validators";
-
 const login = useLogin();
-const test = useTests();
+
 interface LoginData {
   username: string;
   password: string;
@@ -56,7 +54,6 @@ async function Login() {
       return;
     }
     await login.submitLogin(loginData);
-    test.fetchTests();
   } catch (error) {
     console.log("Login error", error);
     throw error;
